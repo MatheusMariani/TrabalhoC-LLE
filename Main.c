@@ -33,7 +33,7 @@ void ExibeLLE(Caixa * L)
         printf("\n\n numero de movimentacoes %d.\n\n",cont);
  }
 }
-Caixa * InsereLLE_F (Caixa * L, int d,int saida, int i) //F = fim (terminar)
+Caixa * InsereLLE_F (Caixa * L, int d,int saida, int i,char* desc,int Codigo) //F = fim (terminar)
 {
  Caixa *pAux, *novo;//pAux será usado na busca pelo fim
                   // novo receberá o dado para inserir
@@ -41,6 +41,8 @@ Caixa * InsereLLE_F (Caixa * L, int d,int saida, int i) //F = fim (terminar)
     novo->data = d;
     novo->tsaida = saida;
     novo->valor = i;
+    strcpy(novo->descricao,desc);
+    novo->codigo = Codigo;
     novo->elo = NULL; // vai ser o último
 
     if (L == NULL)
@@ -49,22 +51,62 @@ Caixa * InsereLLE_F (Caixa * L, int d,int saida, int i) //F = fim (terminar)
         pAux = L; // p1 no início da lista
     while (pAux->elo != NULL){
         pAux = pAux->elo;   //p1 no final da lista
-    }
+        }
         pAux->elo = novo; //encadeia com o novo
- }
+        }
  return L;
 }
-Caixa * RemoverPorData(Caixa * L, ) (TERMINAR)
+Caixa * RemoverPorCodigo(Caixa * lAux,int cod ){
+
+Caixa *ptAux, *desaloca;
+    if(lAux==NULL) //lista vazia
+    {
+        printf("ERRO - Lista Vazia!\n\n");
+        return lAux;
+        }
+
+
+        ptAux = lAux; // p1 no início da lista
+        while(ptAux->codigo != cod){
+            ptAux = ptAux->elo;
+            }
+        desaloca = ptAux->elo;
+        ptAux->elo = NULL;
+        free (desaloca);
+    return lAux ;
+
+}
+
+void ExibeData(Caixa * L, int d){
+    Caixa * Paux;
+    Paux = L;
+    if (L == NULL){ //nenhum elemento
+    printf("\nLista vazia!\n\n");
+    return 0;
+    }
+
+      Paux = L; //Paux recebe o endereço do início da lista
+        while (Paux != NULL){
+            if(d == Paux->data){//Percorrer a lista
+                printf("COD\t\t 1-saque 2-deposito\t\t VALOR\t\t DATA\t\t DESCRICAO\t\t\n ");
+                printf("codigo:%d\t\t tipo:%d\t valor = %d na data: %d\t descricao:%s\t\n", Paux->codigo,Paux->tsaida, Paux->valor,Paux->data,Paux->descricao);
+                }
+
+                Paux = Paux->elo;
+                }
+                return 0;
+}
 
 int main(){
-int opcao,x=0,valor,pos,data,saida;
+int opcao,x=0,valor,pos,data,saida,codigo,i;
 Caixa * L;
+char descri[30];
 L = InicializaLLE();
 do{
     system("cls");
     printf("\nEntre com a opcao:\n");
     printf(" 1 - Inserir entrada\n");
-    printf(" 2 - Remover entrada por data\n");
+    printf(" 2 - Remover entrada por codigo\n");
     printf(" 3 - Consulta movimentacao por data\n");
     printf(" 4 - Exibir todas as movimentacoes\n");
     printf(" 5 - Exibir total de saidas, entradas e saldo\n");
@@ -81,22 +123,33 @@ do{
                 scanf("%d",&saida);
                 printf("Digite um valor para inserir:\n");
                 scanf("%d",&valor);
+                printf("Descricao: ");
+                fflush(stdin);
+                fgets(descri, 40, stdin);
+                printf("codigo:\n");
+                scanf("%d",&codigo);
 
-              L=InsereLLE_F(L,data,saida,valor);
-
+              L=InsereLLE_F(L,data,saida,valor,descri,codigo);
+                break;
       case 2:
+          printf("digite o codigo");
+          scanf("%d",&codigo);
+          RemoverPorCodigo(L,codigo);
               break;
       case 3:
-              break;
+          printf("coloque uma data:");
+                scanf("%d", &i);
+                ExibeData(L,i);
+                system("pause");
+                break;
       case 4:
           ExibeLLE(L);
-         system("pause");
+            system("pause");
               break;
       case 5:
             break;
       case 6:
-              break;
-      case 7: exit(0);
+             exit(0);
               break;
       default:
                printf("\tATENCAO - Opcao invalida, tente novamente!\n");
@@ -104,11 +157,3 @@ do{
      }
  }while(x == 0);
 }
-
-
-
-
-
-
-
-
