@@ -67,11 +67,11 @@ Caixa *ptAux, *desaloca;
 
 
         ptAux = lAux; // p1 no início da lista
-        while(ptAux->codigo != cod){
+        while(ptAux->elo->codigo != cod){
             ptAux = ptAux->elo;
             }
         desaloca = ptAux->elo;
-        ptAux->elo = NULL;
+        ptAux->elo = ptAux->elo->elo;
         free (desaloca);
     return lAux ;
 
@@ -157,3 +157,4 @@ do{
      }
  }while(x == 0);
 }
+
