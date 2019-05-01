@@ -88,14 +88,47 @@ void ExibeData(Caixa * L, int d){
       Paux = L; //Paux recebe o endereço do início da lista
         while (Paux != NULL){
             if(d == Paux->data){//Percorrer a lista
-                printf("COD\t\t 1-saque 2-deposito\t\t VALOR\t\t DATA\t\t DESCRICAO\t\t\n ");
-                printf("codigo:%d\t\t tipo:%d\t valor = %d na data: %d\t descricao:%s\t\n", Paux->codigo,Paux->tsaida, Paux->valor,Paux->data,Paux->descricao);
+                printf("-----------------------------------------------\n\n");
+                printf("codigo:%d\t tipo:%d\t valor = %d\t na data: %d\t descricao:%s\t\n", Paux->codigo,Paux->tsaida, Paux->valor,Paux->data,Paux->descricao);
                 }
 
                 Paux = Paux->elo;
                 }
                 return 0;
 }
+
+void MostraSaldo(Caixa * L){
+Caixa * Paux;
+int deposito=0;
+int saque=0;
+int saldo=0;
+    Paux = L;
+    if (L == NULL){ //nenhum elemento
+    printf("\nLista vazia!\n\n");
+    return 0;
+    }
+
+      Paux = L; //Paux recebe o endereço do início da lista
+        while (Paux != NULL){
+            if(Paux->tsaida == 1){//Percorrer a lista
+                printf("tipo: entrada.\t valor:%d descricao:%s\n",Paux->valor,Paux->descricao);
+                deposito=Paux->valor+deposito;
+                }
+            else if(Paux->tsaida == 2){
+                printf("tipo: saida.\t valor:%d descricao:%s\n",Paux->valor,Paux->descricao);
+                saque=Paux->valor+saque;
+            }
+
+                Paux = Paux->elo;
+                }
+                saldo=deposito-saque;
+                printf("saldo = %d\n",saldo);
+                return 0;
+}
+
+
+
+
 
 int main(){
 int opcao,x=0,valor,pos,data,saida,codigo,i;
@@ -119,7 +152,7 @@ do{
       case 1:
                 printf("Digite a data:\n");
                 scanf("%d",&data);
-                printf("Digite o tipo de saida 1 - saque 2 - deposito:\n");
+                printf("Digite o tipo de saida 1 - saida 2 - entrada:\n");
                 scanf("%d",&saida);
                 printf("Digite um valor para inserir:\n");
                 scanf("%d",&valor);
@@ -147,6 +180,8 @@ do{
             system("pause");
               break;
       case 5:
+          MostraSaldo(L);
+          system("pause");
             break;
       case 6:
              exit(0);
@@ -157,4 +192,5 @@ do{
      }
  }while(x == 0);
 }
+
 
