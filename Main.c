@@ -110,17 +110,22 @@ int saldo=0;
 
       Paux = L; //Paux recebe o endereço do início da lista
         while (Paux != NULL){
-            if(Paux->tsaida == 1){//Percorrer a lista
-                printf("tipo: entrada.\t valor:%d descricao:%s\n",Paux->valor,Paux->descricao);
+            if(Paux->tsaida == 1){
+                printf("Entradas:\n");
+                printf("6valor:%d descricao:%s\n",Paux->valor,Paux->descricao);
                 deposito=Paux->valor+deposito;
                 }
-            else if(Paux->tsaida == 2){
-                printf("tipo: saida.\t valor:%d descricao:%s\n",Paux->valor,Paux->descricao);
-                saque=Paux->valor+saque;
-            }
-
                 Paux = Paux->elo;
                 }
+                Paux = L; //Paux recebe o endereço do início da lista
+        while (Paux != NULL){
+            if(Paux->tsaida == 2){
+                printf("Saidas:\n");
+                printf("valor:%d descricao:%s\n",Paux->valor,Paux->descricao);
+                saque=Paux->valor+saque;
+            }
+            Paux = Paux->elo;
+        }
                 saldo=deposito-saque;
                 printf("saldo = %d\n",saldo);
                 return 0;
@@ -152,7 +157,7 @@ do{
       case 1:
                 printf("Digite a data:\n");
                 scanf("%d",&data);
-                printf("Digite o tipo de saida 1 - saida 2 - entrada:\n");
+                printf("Digite o tipo de saida 1 - entrada 2 - saida:\n");
                 scanf("%d",&saida);
                 printf("Digite um valor para inserir:\n");
                 scanf("%d",&valor);
@@ -192,5 +197,3 @@ do{
      }
  }while(x == 0);
 }
-
-
