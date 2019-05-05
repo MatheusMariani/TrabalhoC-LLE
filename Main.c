@@ -16,6 +16,7 @@ struct nodo{
 {
 	return NULL;
 }
+//exibe a lista completa
 void ExibeLLE(Caixa * L)
 {
     Caixa * Paux;
@@ -33,40 +34,41 @@ void ExibeLLE(Caixa * L)
         printf("\n\n numero de movimentacoes %d.\n\n",cont);
  }
 }
-Caixa * InsereLLE_F (Caixa * L, int d,int saida, int i,char* desc,int Codigo) //F = fim (terminar)
+//Insere o elemento no final da lista
+Caixa * InsereLLE_F (Caixa * L, int d,int saida, int i,char* desc,int Codigo)
 {
- Caixa *pAux, *novo;//pAux será usado na busca pelo fim
-                  // novo receberá o dado para inserir
-    novo=(Caixa *) malloc(sizeof (Caixa));//aloca memória
+ Caixa *pAux, *novo;
+    novo=(Caixa *) malloc(sizeof (Caixa));
     novo->data = d;
     novo->tsaida = saida;
     novo->valor = i;
     strcpy(novo->descricao,desc);
     novo->codigo = Codigo;
-    novo->elo = NULL; // vai ser o último
+    novo->elo = NULL;
 
     if (L == NULL)
-      L = novo; // 1º nodo
+      L = novo;
     else{
-        pAux = L; // p1 no início da lista
+        pAux = L;
     while (pAux->elo != NULL){
-        pAux = pAux->elo;   //p1 no final da lista
+        pAux = pAux->elo;
         }
-        pAux->elo = novo; //encadeia com o novo
+        pAux->elo = novo;
         }
  return L;
 }
+//remove pelo código digitado
 Caixa * RemoverPorCodigo(Caixa * lAux,int cod ){
 
 Caixa *ptAux, *desaloca;
-    if(lAux==NULL) //lista vazia
+    if(lAux==NULL)
     {
         printf("ERRO - Lista Vazia!\n\n");
         return lAux;
         }
 
 
-        ptAux = lAux; // p1 no início da lista
+        ptAux = lAux;
         while(ptAux->elo->codigo != cod){
             ptAux = ptAux->elo;
             }
@@ -76,51 +78,55 @@ Caixa *ptAux, *desaloca;
     return lAux ;
 
 }
-
+//exibe as entradas/saidas da data digitada
 void ExibeData(Caixa * L, int d){
     Caixa * Paux;
     Paux = L;
-    if (L == NULL){ //nenhum elemento
+    int contador=0;
+    if (L == NULL){
     printf("\nLista vazia!\n\n");
     return 0;
     }
 
-      Paux = L; //Paux recebe o endereço do início da lista
+      Paux = L;
         while (Paux != NULL){
-            if(d == Paux->data){//Percorrer a lista
+            if(d == Paux->data){
                 printf("-----------------------------------------------\n\n");
                 printf("codigo:%d\t tipo:%d\t valor = %d\t na data: %d\t descricao:%s\t\n", Paux->codigo,Paux->tsaida, Paux->valor,Paux->data,Paux->descricao);
+                contador++;
                 }
 
                 Paux = Paux->elo;
                 }
+                if(contador == 0)
+                    printf("\nSem movimentacao nessa data!\n");
                 return 0;
 }
-
+//mostra o saldo com todas as entradas e saidas.
 void MostraSaldo(Caixa * L){
 Caixa * Paux;
 int deposito=0;
 int saque=0;
 int saldo=0;
     Paux = L;
-    if (L == NULL){ //nenhum elemento
+    if (L == NULL){
     printf("\nLista vazia!\n\n");
     return 0;
     }
 
-      Paux = L; //Paux recebe o endereço do início da lista
+      Paux = L;
+      printf("Entradas:\n");
         while (Paux != NULL){
             if(Paux->tsaida == 1){
-                printf("Entradas:\n");
-                printf("6valor:%d descricao:%s\n",Paux->valor,Paux->descricao);
+                printf("valor:%d descricao:%s\n",Paux->valor,Paux->descricao);
                 deposito=Paux->valor+deposito;
                 }
                 Paux = Paux->elo;
                 }
                 Paux = L; //Paux recebe o endereço do início da lista
+                printf("Saidas:\n");
         while (Paux != NULL){
             if(Paux->tsaida == 2){
-                printf("Saidas:\n");
                 printf("valor:%d descricao:%s\n",Paux->valor,Paux->descricao);
                 saque=Paux->valor+saque;
             }
@@ -130,13 +136,33 @@ int saldo=0;
                 printf("saldo = %d\n",saldo);
                 return 0;
 }
+//salva as movimentacoes em um arquivo de texto.
+void SalvaArquivo(Caixa * L){
+    char nome[20] = "Caixa.txt";
+    FILE * FFLuxo;
+    Caixa * Paux;
+    Paux = L;
 
+      if(L == NULL){
+         printf("lista vazia");
+      }
+      else{
+        FFLuxo = fopen(nome,"a+");
+        Paux = L;
+        while(Paux!= NULL){
+            fprintf(FFLuxo,"codigo:%d tipo:%d, valor = %d, na data: %d, descricao:%s\n", Paux->codigo,Paux->tsaida, Paux->valor,Paux->data,Paux->descricao);
+            Paux = Paux->elo;
+        }
+        fclose(FFLuxo);
+        return 0;
+      }
+}
 
 
 
 
 int main(){
-int opcao,x=0,valor,pos,data,saida,codigo,i;
+int opcao,x=0,valor,pos,data,saida,codigo,i,op;
 Caixa * L;
 char descri[30];
 L = InicializaLLE();
@@ -151,7 +177,7 @@ do{
     printf(" 6 - Sair\n");
 
     scanf("%d",&opcao);
-    fflush(stdin);  //para resolver alguns problemas do scanf, limpando o buffer de teclado
+    fflush(stdin);
     switch (opcao)
     {
       case 1:
@@ -182,8 +208,12 @@ do{
                 break;
       case 4:
           ExibeLLE(L);
-            system("pause");
-              break;
+          printf("deseja salvar a lista? 1 - sim 2 - nao\n");
+          scanf("%d",&op);
+          if(op == 1){
+          SalvaArquivo(L);
+          }
+            break;
       case 5:
           MostraSaldo(L);
           system("pause");
